@@ -26,8 +26,8 @@ const PostStats = ({ post, userId } : PostStatsProps) => {
   const savedPostRecord = currentUser?.save.find((record: Models.Document) => record.post.$id === post.$id);
 
   useEffect(() => {
-    setIsSaved(savedPostRecord ? true : false)
-  },[currentUser])
+    setIsSaved(!!savedPostRecord)
+  },[currentUser, savedPostRecord])
 
   //dve funkce na ulozeni save a like
   const handleLikePost = (e: React.MouseEvent) => {

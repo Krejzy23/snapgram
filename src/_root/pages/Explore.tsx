@@ -35,11 +35,11 @@ const Explore = () => {
   const { data: searchedPosts, isFetching: isSearchFetching } = 
   useSearchPosts(debouncedValue);
   
-  useEffect(()=>{
+  useEffect(() => {
     if(inView && !searchValue) {
       fetchNextPage()
     }
-  }, [inView, searchValue]);
+  }, [inView, searchValue, fetchNextPage]);
 
   if(!posts){
     return(
