@@ -22,14 +22,12 @@ type PostFormProps ={
 
 const PostForm = ({ post, action } : PostFormProps ) => {
   
-  const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
-  const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
   
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { toast } = useToast();
   
-
+  
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
@@ -38,8 +36,11 @@ const PostForm = ({ post, action } : PostFormProps ) => {
       location: post ? post?.caption : "",
       tags: post ? post.tags.join(',') : '',
     },
-  })
- 
+  });
+  
+  const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
     if (post && action === 'Update') {
@@ -65,7 +66,7 @@ const PostForm = ({ post, action } : PostFormProps ) => {
 
     if(!newPost){
         toast({
-          title: "Please try again"
+          title: `${action} post failed. Please try again.`,
         })
     }
     navigate('/');
@@ -73,7 +74,9 @@ const PostForm = ({ post, action } : PostFormProps ) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
+      <form
+       onSubmit={form.handleSubmit(onSubmit)}
+       className="flex flex-col gap-9 w-full max-w-5xl">
         <FormField
           control={form.control}
           name="caption"
@@ -138,6 +141,7 @@ const PostForm = ({ post, action } : PostFormProps ) => {
           <Button
             type="button"
             className="shad-button_dark_4"
+            onClick={() => navigate(-1)}
           >
               Cancel
           </Button>
@@ -153,9 +157,7 @@ const PostForm = ({ post, action } : PostFormProps ) => {
         
       </form>
     </Form>
+  );
+};
 
-
-  )
-}
-
-export default PostForm
+export default PostForm;
